@@ -30,8 +30,12 @@ def read():
     f.close()
 
     for code in codes:
-        if len(code.rstrip('\r\n')) > 0:
-            search(code.rstrip('\r\n'))
+        c = code.rstrip('\r\n')
+        if len(c) > 0:
+            if c.startswith('http://'):
+                get_item('', c)
+            elif c.isdigit():
+                search(c)
 
 
 def write(data):
@@ -40,7 +44,7 @@ def write(data):
 
 
 def get_item(code, url):
-    jan_code = code
+    jan_code = ""
     title = ""
     url_image = ""
     brand = ""
@@ -81,6 +85,9 @@ def get_item(code, url):
             elif line.text.startswith("ジャンル："):
                 genre = line.text.replace("ジャンル：", "").replace(
                     "\n", "")
+            elif line.text.startswith("JANコード："):
+                jan_code = line.text.replace("JANコード：", "").replace(
+                    "\n", "")
             elif line.text.startswith("品番："):
                 product_number = line.text.replace("品番：", "").replace(
                     "\n", "")
@@ -115,13 +122,14 @@ def get_item(code, url):
             except AttributeError:
                 pass
 
-        data = jan_code
+        data = jan_code if len(code) < 13 else code
         data = data + "\t" + title
         data = data + "\t" + url_image
         data = data + "\t" + brand
         data = data + "\t" + price
         data = data + "\t" + pub_date
         data = data + "\t" + genre
+        data = data + "\t" + jan_code
         data = data + "\t" + product_number
         data = data + "\t" + animator
         data = data + "\t" + scenario

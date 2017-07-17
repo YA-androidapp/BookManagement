@@ -18,13 +18,14 @@ cur = con.cursor()
 # 表の新規作成
 cur.execute(
     """create table campany(
-    jan_code text,
+    code text,
     url_image text,
     title text,
     brand text,
     price integer,
     date_pub numeric,
     genre text,
+    jan_code text,
     number text,
     picture text,
     scenario text,
